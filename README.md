@@ -14,7 +14,7 @@
     - dependency : Spring web, Mysql Driver, Mybatis Framework
     - Lombok 설정
         - compileOnly "org.projectlombok:lombok:1.18.20"
-	- annotationProcessor "org.projectlombok:lombok"
+        - annotationProcessor "org.projectlombok:lombok"
         - intelij - settings -> annotation processor
  - DB 접속 설정
     - src - resources - application.properties
