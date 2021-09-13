@@ -1,51 +1,47 @@
-# Sample Project 셋팅 순서
+# Project Setting
 
- - Docker 설치 - https://docs.docker.com/compose/install/ (docker-compose를 실행할 수 있어야 한다.)
-    - windows의 경우 WSL2가 설정이 된 상태여야한다. (https://www.44bits.io/ko/post/wsl2-install-and-basic-usage)
-    - 과제 : docker에 관해서 조사 
+ - Docker 설치 
+    - windows의 경우 WSL2가 설정이 된 상태여야한다.
  - Mysql 설치
-    - docker-compose 참고 (https://docs.microsoft.com/ko-kr/visualstudio/docker/tutorials/use-docker-compose)
-    - docker-compose 폴더의 mysql.yml을 이용함
     - docker-compose -f mysql.yml up -d
  - Mysql Workbench 설치 
     - https://dev.mysql.com/downloads/workbench/
     - 설치한 Mysql 서버 연결
  - POST MAN 설치한다 (rest client tool)
- - Local DB에 접속해서 Table을 만든다. (테이블을 만들때는 ERD를 이용해서 만들어보자)
-    - user
-    - login_history
-    - 두 테이블은 1:N 관계다
- - openjdk 11을 다운로드 받고 설치한다. (https://jdk.java.net/archive/) 11 GA버전으로
- - Spring boot project를 만든다. (https://start.spring.io/)
-    - Gradle, Java 11, Spring boot 2.5.3 버전으로 만든다.
-    - dependency : Spring web, Mysql Driver, Mybatis Framework를 추가한다.
-    - lombok을 추가한다.
+ - openjdk 11 GA version
+ - Spring boot project (https://start.spring.io/)
+    - Gradle, Java 11, Spring boot 2.5.3 version
+    - dependency : Spring web, Mysql Driver, Mybatis Framework
+    - Lombok 설정
         - compileOnly "org.projectlombok:lombok:1.18.20"
-	    - annotationProcessor "org.projectlombok:lombok"
-        - intelij - settings -> annotation processor를 검색해서 Enable 해준다.
- - 과제 : Spring bean에 관하여 조사
- - 과제 : @PathVariable, @RequestParam, @RequestBody 관하여 조사
- - Spring boot project를 Intellij 에서 연다.
-    - src - resources - application.properties를 열어서 db접속 설정을 한다.
-    - application.properties 파일에서 mybatis config 설정을 한다.
+	- annotationProcessor "org.projectlombok:lombok"
+        - intelij - settings -> annotation processor
+ - DB 접속 설정
+    - src - resources - application.properties
+    - application.properties 파일에서 mybatis config 설정
         - src - resources 안에 mybatis-config.xml 파일을 만들어 설정을 한다.
         - src - resources 안에 mybatis 폴더를 만들고 안에 mapper 파일을 넣는다.
- # 요구사항
- - API를 개발한다.
-     - 회원가입
-     - 회원존재하는지 체크 (중복 체크)
-     - 회원정보 불러오기
-     - 회원정보수정
-     - 회원탈퇴
+ 
+# 구현 사항
 
-# 검색해볼 키워드
- - spring boot mybatis 
- - mysql docker 설치
- - form tag
- - ajax
- - mysql insert update delete select
- - mysql workbench erd
- - post man api
- - openjdk 11 설치
- - lombok 이란 
+ - 간단한 API를 개발
+     - 회원가입/회원 중복 체크
+     - 회원정보 불러오기/회원정보 수정
+     - 회원탈퇴
+ - Lombok을 사용한 Client 요청 값 유효성 검증
+ - @RestControllerAdvice와 @ExceptionHandler로 예외처리 일원화
+ - 예외 발생 시 Slack Message로 Notification 기능
+ - 정규표현식을 사용한 이메일 형식 검증 (Spring AOP 적용) 
+
+# 메모
+
+ - Lombok을 남용하면 안 된다
+     - 가령 @Setter나 @AllArgsConstructor @Data 등은 잠재적인 오류를 초래할 수 있다
+     - @Setter는 꼭 필요한 변수에만 사용
+     - @AllArgsConstructor 사용 시 같은 type의 변수에 의미가 다른 값을 혼동하여 전달할 여지가 있으므로, Builder Pattern을 사용하자
+ - Controller, Service의 역할을 분명히 하여 코드를 깔끔하게 짜는 것이 좋다.
+     - Controller Layer에는 사용자(Front-End)의 요청 값에 대한 검증 로직만 구현하고, Service 로직에 대한 처리(예외 등)은 Service Layer에 구현하자
+ - Apache의 Util Class들을 활용하여 값이나 객체의 null, empty 검사 코드를 깔끔하게 작성할 수 있다
+ - Static class는 기본 생성자에 private 접근제한자를 사용해 불필요한 Instance 생성을 방지하는 것이 좋다
+
  
