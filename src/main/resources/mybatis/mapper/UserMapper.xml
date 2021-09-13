@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.hsl.sample_api.mapper.UserMapper">
+
+  <select id="getUsers" resultType="UserVO">
+    SELECT
+      *
+    FROM
+      user
+  </select>
+
+  <insert id="joinUser" parameterType="UserVO" useGeneratedKeys="true" keyColumn="no">
+    INSERT INTO
+      user
+    SET
+      name=#{name},
+      email=#{email},
+      passwd=#{passwd}
+  </insert>
+
+  <select id="findUserByEmail" parameterType="String" resultType="UserVO">
+    SELECT
+      *
+    FROM
+      user
+    WHERE
+      email=#{email}
+  </select>
+
+  <select id="findUserByNo" parameterType="Integer" resultType="UserVO">
+    SELECT
+      *
+    FROM
+      user
+    WHERE
+      no=#{no}
+  </select>
+
+  <update id="updatePasswd" parameterType="UserVO">
+    UPDATE
+      user
+    SET
+      passwd=#{passwd}
+    WHERE
+      no=#{no}
+  </update>
+
+  <delete id="deleteUser" parameterType="Integer">
+    DELETE FROM
+      user
+    WHERE
+      no=#{no}
+  </delete>
+
+</mapper>
