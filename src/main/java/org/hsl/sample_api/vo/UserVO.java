@@ -10,10 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Setter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@RequiredArgsConstructor
 @ToString
 public class UserVO extends Throwable {
 

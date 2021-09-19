@@ -8,6 +8,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @Configuration
 @EnableAspectJAutoProxy
 public class AppCtx {
+
     @Bean
     public ValidationAspect ValidationAspect() {
         return new ValidationAspect();

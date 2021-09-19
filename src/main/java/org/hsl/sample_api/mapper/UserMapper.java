@@ -13,6 +13,7 @@ public interface UserMapper {
     public void joinUser(UserVO userVO);
 
     public UserVO findUserByEmail(String email);
+
     public UserVO findUserByNo(int no);
 
     public void updatePasswd(UserVO userVO);
