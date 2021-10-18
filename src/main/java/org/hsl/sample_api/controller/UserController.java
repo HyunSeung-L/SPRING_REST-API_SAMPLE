@@ -1,7 +1,21 @@
 package org.hsl.sample_api.controller;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.UUID;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
+import org.hsl.sample_api.annotation.ValidationAnnotation.CheckEmailFormat;
+import org.hsl.sample_api.service.RedisService;
+import org.hsl.sample_api.service.TokenService;
 import org.hsl.sample_api.service.UserService;
-import org.hsl.sample_api.utils.ValidationUtils;
+import org.hsl.sample_api.utils.CookiePool;
+import org.hsl.sample_api.vo.LoginVO;
 import org.hsl.sample_api.vo.UserVO;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
@@ -12,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @Validated
 @RequestMapping("/user")
@@ -19,6 +34,51 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private RedisService redisService;
+
+    /**
+     * 로그인
+     *
+     * @param loginVO
+     * @param response
+     * @return
+     */
+    @PostMapping(value = "/login")
+    public ResponseEntity userLogin(@RequestBody LoginVO loginVO,
+        HttpServletResponse response) throws IOException {
+
+        UserVO loginUserVO = userService.loginUserCheck(loginVO);
+        if (ObjectUtils.isEmpty(loginUserVO)) {
+            return new ResponseEntity("/login", HttpStatus.RESET_CONTENT);
+        }
+
+        final String randomUUID = UUID.randomUUID().toString().replace("-", "");
+        final String refreshToken = tokenService.createJwtToken(randomUUID);
+        redisService.setDataExpire(refreshToken, randomUUID, 60 * 60 * 24 * 7);
+
+        Cookie cookie = CookiePool.createCookie("RefreshToken", refreshToken, "/", 60 * 60 * 24 * 7);
+        response.addCookie(cookie);
+
+        return new ResponseEntity("/user/session", HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/logout")
+    public ResponseEntity userLogout(HttpServletRequest request, HttpServletResponse response) {
+        CookiePool cookiePool = new CookiePool(request);
+        Cookie refreshTokenCookie = cookiePool.getCookie("RefreshToken");
+
+        final String refreshToken = refreshTokenCookie.getValue();
+
+        redisService.deleteData(refreshToken);
+        log.info("token info were deleted from redis");
+
+        return new ResponseEntity("/logout complete", HttpStatus.OK);
+    }
 
     /**
      * 모든 회원정보 조회
@@ -52,6 +112,7 @@ public class UserController {
      * @param passwd
      * @return
      */
+    @CheckEmailFormat
     @PostMapping("/join")
     public ResponseEntity joinUser(
         @NotBlank(message = "이메일이 입력되지 않았습니다!") @RequestParam String email,

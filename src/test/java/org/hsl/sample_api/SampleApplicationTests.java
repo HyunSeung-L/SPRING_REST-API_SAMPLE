@@ -1,5 +1,7 @@
 package org.hsl.sample_api;
 
+import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.hsl.sample_api.utils.ValidationUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -8,8 +10,17 @@ import org.junit.jupiter.api.Test;
 class SampleApplicationTests {
 
     @Test
-    void contextLoads() {
+    void testString() {
+        //given
+        String input = "http://www.Naver.com/1234";
+        String result = TestClass.convert(input);
 
+        String expected = "http www Naver com 1234";
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void testEmail() {
         //given
         String email1 = "test@test.com";
         String email2 = "test123@test.com";
@@ -28,7 +39,5 @@ class SampleApplicationTests {
         Assertions.assertEquals(ValidationUtils.isValidEmail(email6), true);
         Assertions.assertEquals(ValidationUtils.isValidEmail(email7), true);
         Assertions.assertEquals(ValidationUtils.isValidEmail(email8), true);
-
-
     }
 }

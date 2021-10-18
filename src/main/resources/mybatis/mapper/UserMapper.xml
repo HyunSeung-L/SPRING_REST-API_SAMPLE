@@ -28,6 +28,16 @@
       email=#{email}
   </select>
 
+  <select id="findUserByEmailAndPasswd" parameterType="LoginVO" resultType="UserVO">
+    SELECT
+      *
+    FROM
+      user
+    WHERE
+      email=#{email}
+      AND passwd=#{passwd}
+  </select>
+
   <select id="findUserByNo" parameterType="Integer" resultType="UserVO">
     SELECT
       *

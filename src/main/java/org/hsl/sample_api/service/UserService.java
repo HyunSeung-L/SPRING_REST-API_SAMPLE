@@ -5,18 +5,27 @@ import org.hsl.sample_api.exception.JoinUserFailException;
 import org.hsl.sample_api.exception.NoUserDataException;
 import org.hsl.sample_api.exception.UpdatePasswdFailException;
 import org.hsl.sample_api.mapper.UserMapper;
+import org.hsl.sample_api.vo.LoginVO;
 import org.hsl.sample_api.vo.UserVO;
 import java.util.List;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(propagation = Propagation.REQUIRED)
 public class UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    public UserVO loginUserCheck(LoginVO loginVO) {
+        UserVO user = this.userMapper.findUserByEmailAndPasswd(loginVO);
+        return user;
+    }
 
     public List<UserVO> getUsers() {
         List<UserVO> users = this.userMapper.getUsers();
