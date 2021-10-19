@@ -1,6 +1,6 @@
 # 구현 사항
 
- - 간단한 API 개발 및 JWT(java Web Token) 기반 로그인 구현
+ - 간단한 API 개발 
     - 회원 가입, 회원 로그인, 회원 정보 조회, 회원 정보 수정, 로그아웃(저장된 토큰 정보 삭제)
     - Lombok을 사용한 Client 요청 값 유효성 검증
     - @RestControllerAdvice와 @ExceptionHandler로 예외처리 일원화
@@ -9,7 +9,7 @@
 	- POSTMAN으로 API 검증
 	 
 	 
- - JWT 기반 로그인 구현 (interceptor에서 random uuid 비교를 통해 token 검증)
+ - JWT 기반 로그인 구현
 	- Login 페이지 구현(HTML, JQuery, Ajax)
 	- Login 성공 시 
 	    - Token-Random UUID 값을 Redis에 저장
